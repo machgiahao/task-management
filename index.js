@@ -9,6 +9,9 @@ database.connect();
 const app = express();
 const port = process.env.PORT;
 
+// parse application/json
+app.use(bodyParser.json());
+
 routesApiVer1(app);
 
 

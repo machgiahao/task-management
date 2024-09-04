@@ -17,8 +17,6 @@ module.exports.index = async (req, res) => {
     if (req.query.sortKey && req.query.sortValue) {
         sort[req.query.sortKey] = req.query.sortValue;
     }
-
-    
     // End sort
 
     // Paging
@@ -35,7 +33,7 @@ module.exports.index = async (req, res) => {
     const tasks = await Task.find(find)
         .sort(sort)
         .limit(objectPagination.limitItems)
-        .skip(objectPagination.skip);; 
+        .skip(objectPagination.skip);;
 
     res.json(tasks);
 }
@@ -57,3 +55,27 @@ module.exports.detail = async (req, res) => {
     }
 }
 
+// [PATCH] /api/v1/tasks/change-status/:id
+module.exports.changeStatus = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const status = req.body.status;
+
+        await Task.updateOne({
+            _id: id
+        }, {
+            status: status
+        });
+
+        res.json({
+            code: 200,
+            message: "Update status successfully !" // send MESSAGE to FE to send notification to user
+        });
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Task does not exist !" // send MESSAGE to FE to send notification to user
+        });
+    }
+
+}
