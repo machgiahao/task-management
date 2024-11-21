@@ -9,7 +9,7 @@ module.exports.register = async (req, res) => {
         deleted: false
     });
 
-    if(existEmail) { 
+    if (existEmail) {
         res.json({
             code: 400,
             message: "Email already exist"
@@ -34,3 +34,35 @@ module.exports.register = async (req, res) => {
     }
 }
 
+module.exports.login = async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await User.findOne({
+        email: email,
+        deleted: false
+    })
+
+    if (!user) {
+        return res.json({
+            code: 400,
+            message: "Email is not exist"
+        });
+    }
+
+    if (md5(password) !== user.password) {
+        return res.json({
+            code: 400,
+            message: "Password is incorrect"
+        })
+    }
+
+    const token = user.token;
+    res.cookie("token", token);
+
+    return res.json({
+        code: 200,
+        message: "Login successfully",
+        token: token
+    });
+}
