@@ -139,7 +139,6 @@ module.exports.otpPassword = async (req, res) => {
 }
 
 module.exports.reset = async (req, res) => {
-
     const token = req.cookies.token;
     const password = req.body.password;
 
@@ -166,4 +165,19 @@ module.exports.reset = async (req, res) => {
         token: token
     })
 
+}
+
+module.exports.detail = async (req, res) => {
+    const token = req.cookies.token;
+
+    const user = await User.findOne({
+        token: token,
+        deleted: false
+    }).select("-password -token");
+
+    return res.json({
+        code: 200,
+        message: "Login successfully",
+        info: user
+    });
 }
