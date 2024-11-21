@@ -127,18 +127,17 @@ module.exports.changeMulti = async (req, res) => {
 // [POST] /api/v1/tasks/create
 module.exports.create = async (req, res) => {
     try {
-        // const task = new Task(req.body);
+        req.body.createdBy = req.user.id;
         const data = await Task.create(req.body);
-
         res.json({
             code: 200,
-            message: "Create successfully !", // send MESSAGE to FE to send notification to user
+            message: "Create successfully !", 
             data: data
         });
     } catch (error) {
         res.json({
             code: 400,
-            message: "Create fail !" // send MESSAGE to FE to send notification to user
+            message: "Create fail !" 
         });
     }
 }
